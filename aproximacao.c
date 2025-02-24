@@ -17,6 +17,9 @@
 #define A_BUTTON 5
 #define B_BUTTON 6
 
+#define A_BUZZER 21
+#define B_BUZZER 10
+
 static volatile bool deactivate = 0;
 
 static volatile uint32_t last_time = 0; 
@@ -41,6 +44,12 @@ void init_all() {
     gpio_init(B_BUTTON);
     gpio_set_dir(B_BUTTON, GPIO_IN);
     gpio_pull_up(B_BUTTON);
+
+    gpio_init(A_BUZZER);
+    gpio_set_dir(A_BUZZER, GPIO_OUT);
+
+    gpio_init(B_BUZZER);
+    gpio_set_dir(B_BUZZER, GPIO_OUT);
 
 }
 
@@ -70,6 +79,8 @@ int64_t turn_off_callback(alarm_id_t id, void *user_data) {
     }
     else{
         gpio_put(R_LED, 1);
+        gpio_put(A_BUZZER, 1);
+        gpio_put(B_BUZZER, 1);
     }
 
 }
@@ -83,6 +94,8 @@ void gpio_irq_handler(uint gpio, uint32_t events){
             if (gpio == B_BUTTON){
 
                 gpio_put(B_LED, !gpio_get(B_LED));
+                gpio_put(A_BUZZER, 0);
+                gpio_put(B_BUZZER, 0);
                
             }
 
