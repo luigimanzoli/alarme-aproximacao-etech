@@ -67,8 +67,9 @@ int64_t turn_off_callback(alarm_id_t id, void *user_data) {
 
     if (gpio_get(B_LED)){
         get_led(0,0,0);
-        deactivate = 0;
-        printf("deativate = %b\n", deactivate);
+    }
+    else{
+        gpio_put(R_LED, 1);
     }
 
 }
@@ -82,9 +83,7 @@ void gpio_irq_handler(uint gpio, uint32_t events){
             if (gpio == B_BUTTON){
 
                 gpio_put(B_LED, !gpio_get(B_LED));
-                deactivate = 1;
-                printf("deativate = %b\n", deactivate);
-            
+               
             }
 
         }
@@ -111,7 +110,9 @@ int main() {
 
             printf("Alarme começando.\n");
 
-            add_alarm_in_ms(1000, turn_off_callback, NULL, true);
+            gpio_put(R_LED, 0);
+
+            add_alarm_in_ms(1000, turn_off_callback, NULL, false);
 
         }
 
